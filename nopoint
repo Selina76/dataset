@@ -1,0 +1,88 @@
+let myGraph=document.getElementById('myGraph');
+let twd_jpy_data=JSON.parse(document.getElementById('Nowtime_flight2').innerHTML);
+
+console.log(twd_jpy_data);
+
+function unpack(rows, key){
+    return rows.map(function(row){
+        return row[key];
+    });
+}
+
+// let text= '' + unpack(twd_jpy_data,'city') + ', ' + unpack(twd_jpy_data,'company')+ '' + 'Arrivals: ' + unpack(twd_jpy_data,'time1')
+let trace1 ={};
+
+trace1.type ="scattermapbox";
+// trace1.type ="scattergeo";
+
+trace1.title ="航班資訊";
+
+// trace1.locationmode ="city names";
+// trace1.locations =unpack(twd_jpy_data,'city');
+
+// trace1.hoverinfor= unpack(twd_jpy_data,'company'),
+// trace1.text = text;
+trace1.hoverinfor= unpack(twd_jpy_data,'time1'),
+trace1.text = unpack(twd_jpy_data,'time1'),
+    
+trace1.lat = unpack(twd_jpy_data, "lat");
+trace1.lon = unpack(twd_jpy_data, "lon");
+
+trace1.mode='markers',
+trace1.marker = {
+    color:'blue',
+    symbol: 'airport',
+    opacity: 0.8,
+    size:5
+};
+
+// for(let i=0;i<twd_jpy_data.length;i++){
+//     trace1.text[i] = 0;
+//  }
+
+// for(let i=0;i<rows.length;i++){
+//     for(let j=0;j<twd_jpy_data.length;j++){
+//         if(rows[i]['area'] == twd_jpy_data[j]['name']){
+//             trace1.text[j]+=1;
+//         }
+//     }
+// }
+
+// for (let i = 0; i < twd_jpy_data.length; i++) {
+//     trace1.marker.size[i] = trace1.text[i]*3;//3倍放大
+// }
+
+    
+let data1 = [];
+data1.push(trace1);
+
+
+let layout_5 = {
+    title:'飛機航班即時資訊',
+    font: {
+        color: 'black'
+    },
+    margin: {
+        t: 100,
+        l: 10
+    },
+    showlegend: true,
+	 annotations: [{
+		   x: 0,
+       y: 0,
+       xref: 'paper',
+       yref: 'paper',}],
+    dragmode:"zoom",
+    mapbox:{
+        style:"open-street-map",
+        center:{
+            lat: 25.076389, 
+            lon: 121.223889//桃園機場
+        },
+        zoom:5
+    }
+};
+
+
+
+Plotly.newPlot(myGraph, data1, layout_5);
